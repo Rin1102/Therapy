@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Modal,
-  Alert,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, Alert } from 'react-native';
 import Slider from '@react-native-community/slider';
 import Stars from 'react-native-stars';
 import { FontAwesome } from '@expo/vector-icons';
@@ -79,7 +71,6 @@ const AfterSignUpScreen = ({ navigation }) => {
 
   // Logout functionality
   const handleLogout = () => {
-    console.log('Logging out...'); // Debugging log
     setShowMenu(false); // Close the menu
     navigation.navigate('Login'); // Replace with the Login screen
   };
@@ -105,7 +96,7 @@ const AfterSignUpScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
-  
+
         {/* Avatar Menu */}
         {showMenu && (
           <View style={styles.menuContainer}>
@@ -117,7 +108,7 @@ const AfterSignUpScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         )}
-  
+
         {/* Star Rating Section */}
         <View style={styles.ratingContainer}>
           <Text style={styles.question}>How are you feeling today?</Text>
@@ -129,13 +120,13 @@ const AfterSignUpScreen = ({ navigation }) => {
             emptyStar={<FontAwesome name="star-o" size={30} color="#ccc" />}
           />
         </View>
-  
+
         {/* Daily Checkup Button */}
         <TouchableOpacity style={styles.checkupButton} onPress={() => setShowCheckupForm(true)}>
           <Text style={styles.checkupButtonText}>Daily Checkup</Text>
         </TouchableOpacity>
       </View>
-  
+
       {/* Footer Menu */}
       <View style={styles.footerMenu}>
         <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.menuItem}>
@@ -151,15 +142,103 @@ const AfterSignUpScreen = ({ navigation }) => {
           <Text style={styles.menuText}>Contact</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Daily Checkup Modal */}
+      <Modal visible={showCheckupForm} animationType="slide" transparent={true}>
+        <View style={styles.modal}>
+          <Text style={styles.modalTitle}>Daily Checkup</Text>
+          <Text>Water Cups: {waterCups}</Text>
+          <View style={styles.waterButtons}>
+            <TouchableOpacity onPress={() => setWaterCups(waterCups + 1)}>
+              <Text style={styles.waterButton}>+</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setWaterCups(Math.max(0, waterCups - 1))}>
+              <Text style={styles.waterButton}>-</Text>
+            </TouchableOpacity>
+          </View>
+          <Text>Mood: {mood}%</Text>
+          <Slider
+            style={{ width: 300, height: 40 }}
+            minimumValue={0}
+            maximumValue={100}
+            step={1}
+            value={mood}
+            onValueChange={setMood}
+            minimumTrackTintColor="#51158c"
+            maximumTrackTintColor="#ccc"
+            thumbTintColor="#51158c"
+          />
+          <Text>Did You Sleep Well? {sleep}%</Text>
+          <Slider
+            style={{ width: 300, height: 40 }}
+            minimumValue={0}
+            maximumValue={100}
+            step={1}
+            value={sleep}
+            onValueChange={setSleep}
+            minimumTrackTintColor="#51158c"
+            maximumTrackTintColor="#ccc"
+            thumbTintColor="#51158c"
+          />
+           {/* Heart Rate Logger */}
+           <Text>Log Your Heart Rate (from your watch): {heartRate} bpm</Text>
+          <Slider
+            style={{ width: 300, height: 40 }}
+            minimumValue={40}
+            maximumValue={150}
+            step={1}
+            value={heartRate}
+            onValueChange={setHeartRate}
+             minimumTrackTintColor="#51158c"
+            maximumTrackTintColor="#ccc"
+            thumbTintColor="#51158c"
+          />
+
+          {/* Stress Level Logger */}
+          <Text>Log Your Stress Level (from your watch): {stressLevel}%</Text>
+          <Slider
+            style={{ width: 300, height: 40 }}
+            minimumValue={0}
+            maximumValue={100}
+            step={1}
+            value={stressLevel}
+            onValueChange={setStressLevel}
+             minimumTrackTintColor="#51158c"
+            maximumTrackTintColor="#ccc"
+            thumbTintColor="#51158c"
+          />
+
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.closeButton} onPress={() => setShowCheckupForm(false)}>
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      {/* Popup Modal */}
+      <Modal visible={showPopup} animationType="fade" transparent={true}>
+        <View style={styles.overlay}>
+          <View style={styles.popup}>
+            <Text style={styles.popupMessage}>{popupMessage}</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setShowPopup(false)}>
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
-  
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  content: {
+    flex: 1,
     paddingHorizontal: 20,
     paddingTop: 40,
   },
@@ -224,13 +303,27 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 380, 
     marginTop: 20,
   },
   checkupButtonText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  footerMenu: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  menuText: {
+    fontSize: 12,
+    color: '#51158c',
+    marginTop: 4,
   },
   modal: {
     flex: 1,
@@ -292,21 +385,6 @@ const styles = StyleSheet.create({
     color: '#51158c',
     textAlign: 'center',
     marginBottom: 15,
-  },
-  footerMenu: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  menuText: {
-    fontSize: 12,
-    color: '#51158c',
-    marginTop: 4,
   },
 });
 
