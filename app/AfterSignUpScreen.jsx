@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 300, 
+    marginBottom: 380, 
     marginTop: 20,
   },
   checkupButtonText: {
