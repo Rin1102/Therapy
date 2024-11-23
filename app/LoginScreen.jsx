@@ -1,35 +1,40 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const handleLogin = () => {
+    // Check if the credentials match "admin" / "admin"
+    if (email === 'admin' && password === 'admin') {
+      navigation.navigate('AfterSignUp'); // Navigate to AfterSignUpScreen
+    } else {
+      Alert.alert('Invalid Credentials', 'Please try again!');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
 
-      <Text style={styles.label}>Email:</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your email"
+        placeholder="Email"
         placeholderTextColor="#999"
         value={email}
         onChangeText={setEmail}
-        keyboardType="email-address"
       />
-
-      <Text style={styles.label}>Password:</Text>
       <TextInput
         style={styles.input}
-        placeholder="Enter your password"
+        placeholder="Password"
         placeholderTextColor="#999"
+        secureTextEntry
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
@@ -53,11 +58,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
   },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: '#333',
-  },
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
   },
   button: {
-    backgroundColor: '#8A2BE2',
+    backgroundColor: '#0066cc',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
