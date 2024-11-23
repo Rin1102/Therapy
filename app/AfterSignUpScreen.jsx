@@ -4,17 +4,47 @@ import Slider from '@react-native-community/slider';
 import Stars from 'react-native-stars';
 import { FontAwesome } from '@expo/vector-icons';
 
-const AfterSignUpScreen = ({ navigation }) => {
+const AfterSignUpScreen = () => {
+  const [rating, setRating] = useState(3); // Default star rating
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
   const [showCheckupForm, setShowCheckupForm] = useState(false);
   const [waterCups, setWaterCups] = useState(0);
   const [mood, setMood] = useState(50); // Slider values
   const [sleep, setSleep] = useState(50);
   const [heartRate, setHeartRate] = useState(75); // Example default value
   const [stressLevel, setStressLevel] = useState(30);
-  const [rating, setRating] = useState(3); // Default star rating
 
   const gender = 'female'; // Placeholder: Replace with gender from sign-up form
   const firstName = 'Cyrine'; // Placeholder: Replace with first name from sign-up form
+
+  const handleRatingChange = (newRating) => {
+    setRating(newRating);
+
+    let message = '';
+    switch (newRating) {
+      case 1:
+        message = "Don't be too hard on yourself. Tomorrow is a new day! 🌟";
+        break;
+      case 2:
+        message = "You're doing better than you think. Keep going! 💪";
+        break;
+      case 3:
+        message = "Every day is a step forward. You're doing great! 🌈";
+        break;
+      case 4:
+        message = "You're glowing! Keep up the fantastic work! ✨";
+        break;
+      case 5:
+        message = "Amazing! You deserve all the success and happiness! 🌟🎉";
+        break;
+      default:
+        message = 'Stay positive and keep striving! 🌻';
+    }
+
+    setPopupMessage(message);
+    setShowPopup(true); // Show the popup
+  };
 
   const handleSubmit = () => {
     const formData = {
@@ -23,7 +53,6 @@ const AfterSignUpScreen = ({ navigation }) => {
       sleep,
       heartRate,
       stressLevel,
-      rating,
     };
 
     console.log('Daily Checkup Data:', formData); // Simulating data submission
@@ -35,13 +64,10 @@ const AfterSignUpScreen = ({ navigation }) => {
     <View style={styles.container}>
       {/* Top Bar */}
       <View style={styles.topBar}>
-        {/* Greeting Section */}
         <View style={styles.greetingContainer}>
           <Text style={styles.greeting}>Hello!</Text>
           <Text style={styles.name}>{firstName}</Text>
         </View>
-
-        {/* Avatar */}
         <Image
           source={
             gender === 'female'
@@ -52,15 +78,15 @@ const AfterSignUpScreen = ({ navigation }) => {
         />
       </View>
 
-      {/* Question and Star Rating */}
+      {/* Star Rating Section */}
       <View style={styles.ratingContainer}>
         <Text style={styles.question}>How are you feeling today?</Text>
         <Stars
           default={rating}
           count={5}
-          update={(newRating) => setRating(newRating)}
-          fullStar={<FontAwesome name="star" size={24} color="#FFD700" />}
-          emptyStar={<FontAwesome name="star-o" size={24} color="#ccc" />}
+          update={handleRatingChange}
+          fullStar={<FontAwesome name="star" size={30} color="#FFD700" />}
+          emptyStar={<FontAwesome name="star-o" size={30} color="#ccc" />}
         />
       </View>
 
@@ -94,8 +120,8 @@ const AfterSignUpScreen = ({ navigation }) => {
             step={1}
             value={mood}
             onValueChange={setMood}
-            minimumTrackTintColor="#51158c" // Gold color for the active portion
-           maximumTrackTintColor="#ccc" // Gray color for the inactive portion
+            minimumTrackTintColor="#51158c"
+            maximumTrackTintColor="#ccc"
             thumbTintColor="#51158c"
           />
 
@@ -107,10 +133,10 @@ const AfterSignUpScreen = ({ navigation }) => {
             maximumValue={100}
             step={1}
             value={sleep}
-            minimumTrackTintColor="#51158c" // Gold color for the active portion
-           maximumTrackTintColor="#ccc" // Gray color for the inactive portion
-            thumbTintColor="#51158c"
             onValueChange={setSleep}
+             minimumTrackTintColor="#51158c"
+            maximumTrackTintColor="#ccc"
+            thumbTintColor="#51158c"
           />
 
           {/* Heart Rate Logger */}
@@ -122,8 +148,8 @@ const AfterSignUpScreen = ({ navigation }) => {
             step={1}
             value={heartRate}
             onValueChange={setHeartRate}
-            minimumTrackTintColor="#51158c" // Gold color for the active portion
-           maximumTrackTintColor="#ccc" // Gray color for the inactive portion
+             minimumTrackTintColor="#51158c"
+            maximumTrackTintColor="#ccc"
             thumbTintColor="#51158c"
           />
 
@@ -136,8 +162,8 @@ const AfterSignUpScreen = ({ navigation }) => {
             step={1}
             value={stressLevel}
             onValueChange={setStressLevel}
-            minimumTrackTintColor="#51158c" // Gold color for the active portion
-           maximumTrackTintColor="#ccc" // Gray color for the inactive portion
+             minimumTrackTintColor="#51158c"
+            maximumTrackTintColor="#ccc"
             thumbTintColor="#51158c"
           />
 
@@ -150,6 +176,18 @@ const AfterSignUpScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.closeButton} onPress={() => setShowCheckupForm(false)}>
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
+        </View>
+      </Modal>
+
+      {/* Popup Modal */}
+      <Modal visible={showPopup} animationType="fade" transparent={true}>
+        <View style={styles.overlay}>
+          <View style={styles.popup}>
+            <Text style={styles.popupMessage}>{popupMessage}</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setShowPopup(false)}>
+              <Text style={styles.closeButtonText}>X</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </View>
@@ -188,7 +226,7 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     marginBottom: 20,
-    alignItems: 'flex-start', // Align content to the left
+    alignItems: 'flex-start',
   },
   question: {
     fontSize: 18,
@@ -196,7 +234,7 @@ const styles = StyleSheet.create({
     color: '#555',
   },
   checkupButton: {
-    backgroundColor: '#b163ff',
+    backgroundColor: '#c96dc6',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -229,7 +267,7 @@ const styles = StyleSheet.create({
     color: '#007BFF',
   },
   submitButton: {
-    backgroundColor: '#b163ff',
+    backgroundColor: '#c96dc6',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -248,6 +286,25 @@ const styles = StyleSheet.create({
   closeButtonText: {
     fontSize: 18,
     color: 'red',
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  popup: {
+    backgroundColor: '#fff1e7',
+    padding: 20,
+    borderRadius: 15,
+    alignItems: 'center',
+    width: 300,
+  },
+  popupMessage: {
+    fontSize: 18,
+    color: '#51158c',
+    textAlign: 'center',
+    marginBottom: 15,
   },
 });
 
