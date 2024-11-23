@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import {
   View,
   Text,
@@ -12,7 +11,6 @@ import {
 import Slider from '@react-native-community/slider';
 import Stars from 'react-native-stars';
 import { FontAwesome } from '@expo/vector-icons';
-
 
 const AfterSignUpScreen = ({ navigation }) => {
   const [rating, setRating] = useState(3); // Default star rating
@@ -83,142 +81,79 @@ const AfterSignUpScreen = ({ navigation }) => {
   const handleLogout = () => {
     console.log('Logging out...'); // Debugging log
     setShowMenu(false); // Close the menu
-    navigation.replace('Login'); // Replace with the Login screen
+    navigation.navigate('Login'); // Replace with the Login screen
   };
-  
 
   return (
     <View style={styles.container}>
-      {/* Top Bar */}
-      <View style={styles.topBar}>
-        <View style={styles.greetingContainer}>
-          <Text style={styles.greeting}>Hello!</Text>
-          <Text style={styles.name}>{firstName}</Text>
+      {/* Main Content */}
+      <View style={styles.content}>
+        {/* Top Bar */}
+        <View style={styles.topBar}>
+          <View style={styles.greetingContainer}>
+            <Text style={styles.greeting}>Hello!</Text>
+            <Text style={styles.name}>{firstName}</Text>
+          </View>
+          <TouchableOpacity onPress={() => setShowMenu(!showMenu)}>
+            <Image
+              source={
+                gender === 'female'
+                  ? require('../assets/images/girl_avatar.png')
+                  : require('../assets/images/boy_avatar.png')
+              }
+              style={styles.avatar}
+            />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={() => setShowMenu(!showMenu)}>
-          <Image
-            source={
-              gender === 'female'
-                ? require('../assets/images/girl_avatar.png')
-                : require('../assets/images/boy_avatar.png')
-            }
-            style={styles.avatar}
+  
+        {/* Avatar Menu */}
+        {showMenu && (
+          <View style={styles.menuContainer}>
+            <TouchableOpacity style={styles.menuItem} onPress={handleUpdateProfile}>
+              <Text style={styles.menuItemText}>Update Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+              <Text style={styles.menuItemText}>Log Out</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+  
+        {/* Star Rating Section */}
+        <View style={styles.ratingContainer}>
+          <Text style={styles.question}>How are you feeling today?</Text>
+          <Stars
+            default={rating}
+            count={5}
+            update={handleRatingChange}
+            fullStar={<FontAwesome name="star" size={30} color="#FFD700" />}
+            emptyStar={<FontAwesome name="star-o" size={30} color="#ccc" />}
           />
+        </View>
+  
+        {/* Daily Checkup Button */}
+        <TouchableOpacity style={styles.checkupButton} onPress={() => setShowCheckupForm(true)}>
+          <Text style={styles.checkupButtonText}>Daily Checkup</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Avatar Menu */}
-      {showMenu && (
-        <View style={styles.menuContainer}>
-          <TouchableOpacity style={styles.menuItem} onPress={handleUpdateProfile}>
-            <Text style={styles.menuItemText}>Update Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
-            <Text style={styles.menuItemText}>Log Out</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {/* Star Rating Section */}
-      <View style={styles.ratingContainer}>
-        <Text style={styles.question}>How are you feeling today?</Text>
-        <Stars
-          default={rating}
-          count={5}
-          update={handleRatingChange}
-          fullStar={<FontAwesome name="star" size={30} color="#FFD700" />}
-          emptyStar={<FontAwesome name="star-o" size={30} color="#ccc" />}
-        />
+  
+      {/* Footer Menu */}
+      <View style={styles.footerMenu}>
+        <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.menuItem}>
+          <FontAwesome name="bar-chart" size={24} color="#51158c" />
+          <Text style={styles.menuText}>Dashboard</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('AfterSignUp')} style={styles.menuItem}>
+          <FontAwesome name="home" size={24} color="#51158c" />
+          <Text style={styles.menuText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => Alert.alert('Coming Soon!')} style={styles.menuItem}>
+          <FontAwesome name="phone" size={24} color="#51158c" />
+          <Text style={styles.menuText}>Contact</Text>
+        </TouchableOpacity>
       </View>
-
-      {/* Daily Checkup Button */}
-      <TouchableOpacity style={styles.checkupButton} onPress={() => setShowCheckupForm(true)}>
-        <Text style={styles.checkupButtonText}>Daily Checkup</Text>
-      </TouchableOpacity>
-
-      {/* Daily Checkup Modal */}
-      <Modal visible={showCheckupForm} animationType="slide" transparent={true}>
-        <View style={styles.modal}>
-          <Text style={styles.modalTitle}>Daily Checkup</Text>
-          <Text>Water Cups: {waterCups}</Text>
-          <View style={styles.waterButtons}>
-            <TouchableOpacity onPress={() => setWaterCups(waterCups + 1)}>
-              <Text style={styles.waterButton}>+</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setWaterCups(Math.max(0, waterCups - 1))}>
-              <Text style={styles.waterButton}>-</Text>
-            </TouchableOpacity>
-          </View>
-          <Text>Mood: {mood}%</Text>
-          <Slider
-            style={{ width: 300, height: 40 }}
-            minimumValue={0}
-            maximumValue={100}
-            step={1}
-            value={mood}
-            onValueChange={setMood}
-            minimumTrackTintColor="#51158c"
-            maximumTrackTintColor="#ccc"
-            thumbTintColor="#51158c"
-          />
-          <Text>Did You Sleep Well? {sleep}%</Text>
-          <Slider
-            style={{ width: 300, height: 40 }}
-            minimumValue={0}
-            maximumValue={100}
-            step={1}
-            value={sleep}
-            onValueChange={setSleep}
-            minimumTrackTintColor="#51158c"
-            maximumTrackTintColor="#ccc"
-            thumbTintColor="#51158c"
-          />
-          <Text>Log Your Heart Rate: {heartRate} bpm</Text>
-          <Slider
-            style={{ width: 300, height: 40 }}
-            minimumValue={40}
-            maximumValue={150}
-            step={1}
-            value={heartRate}
-            onValueChange={setHeartRate}
-            minimumTrackTintColor="#51158c"
-            maximumTrackTintColor="#ccc"
-            thumbTintColor="#51158c"
-          />
-          <Text>Log Your Stress Level: {stressLevel}%</Text>
-          <Slider
-            style={{ width: 300, height: 40 }}
-            minimumValue={0}
-            maximumValue={100}
-            step={1}
-            value={stressLevel}
-            onValueChange={setStressLevel}
-            minimumTrackTintColor="#51158c"
-            maximumTrackTintColor="#ccc"
-            thumbTintColor="#51158c"
-          />
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Submit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.closeButton} onPress={() => setShowCheckupForm(false)}>
-            <Text style={styles.closeButtonText}>X</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-
-      {/* Popup Modal */}
-      <Modal visible={showPopup} animationType="fade" transparent={true}>
-        <View style={styles.overlay}>
-          <View style={styles.popup}>
-            <Text style={styles.popupMessage}>{popupMessage}</Text>
-            <TouchableOpacity style={styles.closeButton} onPress={() => setShowPopup(false)}>
-              <Text style={styles.closeButtonText}>X</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
+  
 };
 
 const styles = StyleSheet.create({
@@ -289,6 +224,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
+    marginBottom: 380, 
     marginTop: 20,
   },
   checkupButtonText: {
@@ -356,6 +292,21 @@ const styles = StyleSheet.create({
     color: '#51158c',
     textAlign: 'center',
     marginBottom: 15,
+  },
+  footerMenu: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  menuText: {
+    fontSize: 12,
+    color: '#51158c',
+    marginTop: 4,
   },
 });
 

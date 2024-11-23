@@ -1,28 +1,47 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import WelcomeScreen from '../WelcomeScreen';
-import LoginScreen from '../LoginScreen';
-import SignUpScreen from '../SignUpScreen';
-import AfterSignUpScreen from '../AfterSignUpScreen';
-import UpdateProfileScreen from '../UpdateProfileScreen'; // Import the Update Profile screen
+import WelcomeScreen from '../WelcomeScreen'; // Your Welcome Screen
+import LoginScreen from '../LoginScreen'; // Your Login Screen
+import SignUpScreen from '../SignUpScreen'; // Your Sign-Up Screen
+import AfterSignUpScreen from '../AfterSignUpScreen'; // Your After Sign-Up Screen
+import UpdateProfileScreen from '../UpdateProfileScreen'; // Your Update Profile Screen
+import DashboardScreen from '../DashboardScreen'; // Import the Dashboard Screen
+
+
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Welcome">
+      {/* Welcome Screen */}
       <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }} />
+      
+      {/* Login Screen */}
       <Stack.Screen name="Login" component={LoginScreen} />
+      
+      {/* Sign-Up Screen */}
       <Stack.Screen name="SignUp" component={SignUpScreen} />
+      
+      {/* After Sign-Up Screen */}
       <Stack.Screen
         name="AfterSignUp"
         component={AfterSignUpScreen}
-        options={{ title: 'Dashboard', headerShown: false }} // Optionally hide the header
+        options={{ headerShown: false }}
       />
+      
+      {/* Update Profile Screen */}
+      <Stack.Screen name="UpdateProfile" component={UpdateProfileScreen} />
+      
+      {/* Dashboard Screen */}
       <Stack.Screen
-        name="UpdateProfile"
-        component={UpdateProfileScreen} // Include Update Profile screen
-        options={{ title: 'Update Profile', headerShown: true }} // Optional title/header
+        name="Dashboard"
+        component={DashboardScreen} // Reference the imported DashboardScreen component
+        options={{
+          title: 'Dashboard', // Optional: Set the title of the header
+          headerStyle: { backgroundColor: '#51158c' },
+          headerTintColor: '#fff',
+        }}
       />
     </Stack.Navigator>
   );
