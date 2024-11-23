@@ -1,23 +1,35 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, Alert } from 'react-native';
+
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Modal,
+  Alert,
+} from 'react-native';
 import Slider from '@react-native-community/slider';
 import Stars from 'react-native-stars';
 import { FontAwesome } from '@expo/vector-icons';
 
-const AfterSignUpScreen = () => {
+
+const AfterSignUpScreen = ({ navigation }) => {
   const [rating, setRating] = useState(3); // Default star rating
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [showCheckupForm, setShowCheckupForm] = useState(false);
   const [waterCups, setWaterCups] = useState(0);
-  const [mood, setMood] = useState(50); // Slider values
+  const [mood, setMood] = useState(50);
   const [sleep, setSleep] = useState(50);
-  const [heartRate, setHeartRate] = useState(75); // Example default value
+  const [heartRate, setHeartRate] = useState(75);
   const [stressLevel, setStressLevel] = useState(30);
+  const [showMenu, setShowMenu] = useState(false); // Avatar menu state
 
   const gender = 'female'; // Placeholder: Replace with gender from sign-up form
   const firstName = 'Cyrine'; // Placeholder: Replace with first name from sign-up form
 
+  // Star rating messages
   const handleRatingChange = (newRating) => {
     setRating(newRating);
 
@@ -46,6 +58,7 @@ const AfterSignUpScreen = () => {
     setShowPopup(true); // Show the popup
   };
 
+  // Handle Daily Checkup Submission
   const handleSubmit = () => {
     const formData = {
       waterCups,
@@ -55,10 +68,24 @@ const AfterSignUpScreen = () => {
       stressLevel,
     };
 
-    console.log('Daily Checkup Data:', formData); // Simulating data submission
-    Alert.alert('Submitted', 'Your data has been saved (to be implemented with backend).');
-    setShowCheckupForm(false); // Close the modal after submission
+    console.log('Daily Checkup Data:', formData);
+    Alert.alert('Submitted', 'Your data has been saved.');
+    setShowCheckupForm(false); // Close form
   };
+
+  // Navigate to Update Profile screen
+  const handleUpdateProfile = () => {
+    setShowMenu(false); // Close menu
+    navigation.navigate('UpdateProfile');
+  };
+
+  // Logout functionality
+  const handleLogout = () => {
+    console.log('Logging out...'); // Debugging log
+    setShowMenu(false); // Close the menu
+    navigation.replace('Login'); // Replace with the Login screen
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -68,15 +95,29 @@ const AfterSignUpScreen = () => {
           <Text style={styles.greeting}>Hello!</Text>
           <Text style={styles.name}>{firstName}</Text>
         </View>
-        <Image
-          source={
-            gender === 'female'
-              ? require('../assets/images/girl_avatar.png')
-              : require('../assets/images/boy_avatar.png')
-          }
-          style={styles.avatar}
-        />
+        <TouchableOpacity onPress={() => setShowMenu(!showMenu)}>
+          <Image
+            source={
+              gender === 'female'
+                ? require('../assets/images/girl_avatar.png')
+                : require('../assets/images/boy_avatar.png')
+            }
+            style={styles.avatar}
+          />
+        </TouchableOpacity>
       </View>
+
+      {/* Avatar Menu */}
+      {showMenu && (
+        <View style={styles.menuContainer}>
+          <TouchableOpacity style={styles.menuItem} onPress={handleUpdateProfile}>
+            <Text style={styles.menuItemText}>Update Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+            <Text style={styles.menuItemText}>Log Out</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Star Rating Section */}
       <View style={styles.ratingContainer}>
@@ -95,12 +136,10 @@ const AfterSignUpScreen = () => {
         <Text style={styles.checkupButtonText}>Daily Checkup</Text>
       </TouchableOpacity>
 
-      {/* Modal for Daily Checkup */}
+      {/* Daily Checkup Modal */}
       <Modal visible={showCheckupForm} animationType="slide" transparent={true}>
         <View style={styles.modal}>
           <Text style={styles.modalTitle}>Daily Checkup</Text>
-
-          {/* Water Logger */}
           <Text>Water Cups: {waterCups}</Text>
           <View style={styles.waterButtons}>
             <TouchableOpacity onPress={() => setWaterCups(waterCups + 1)}>
@@ -110,8 +149,6 @@ const AfterSignUpScreen = () => {
               <Text style={styles.waterButton}>-</Text>
             </TouchableOpacity>
           </View>
-
-          {/* Mood Slider */}
           <Text>Mood: {mood}%</Text>
           <Slider
             style={{ width: 300, height: 40 }}
@@ -124,8 +161,6 @@ const AfterSignUpScreen = () => {
             maximumTrackTintColor="#ccc"
             thumbTintColor="#51158c"
           />
-
-          {/* Sleep Slider */}
           <Text>Did You Sleep Well? {sleep}%</Text>
           <Slider
             style={{ width: 300, height: 40 }}
@@ -134,13 +169,11 @@ const AfterSignUpScreen = () => {
             step={1}
             value={sleep}
             onValueChange={setSleep}
-             minimumTrackTintColor="#51158c"
+            minimumTrackTintColor="#51158c"
             maximumTrackTintColor="#ccc"
             thumbTintColor="#51158c"
           />
-
-          {/* Heart Rate Logger */}
-          <Text>Log Your Heart Rate (from your watch): {heartRate} bpm</Text>
+          <Text>Log Your Heart Rate: {heartRate} bpm</Text>
           <Slider
             style={{ width: 300, height: 40 }}
             minimumValue={40}
@@ -148,13 +181,11 @@ const AfterSignUpScreen = () => {
             step={1}
             value={heartRate}
             onValueChange={setHeartRate}
-             minimumTrackTintColor="#51158c"
+            minimumTrackTintColor="#51158c"
             maximumTrackTintColor="#ccc"
             thumbTintColor="#51158c"
           />
-
-          {/* Stress Level Logger */}
-          <Text>Log Your Stress Level (from your watch): {stressLevel}%</Text>
+          <Text>Log Your Stress Level: {stressLevel}%</Text>
           <Slider
             style={{ width: 300, height: 40 }}
             minimumValue={0}
@@ -162,17 +193,13 @@ const AfterSignUpScreen = () => {
             step={1}
             value={stressLevel}
             onValueChange={setStressLevel}
-             minimumTrackTintColor="#51158c"
+            minimumTrackTintColor="#51158c"
             maximumTrackTintColor="#ccc"
             thumbTintColor="#51158c"
           />
-
-          {/* Submit Button */}
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
             <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>
-
-          {/* Close Button */}
           <TouchableOpacity style={styles.closeButton} onPress={() => setShowCheckupForm(false)}>
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
@@ -224,6 +251,30 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
   },
+  menuContainer: {
+    position: 'absolute',
+    top: 80,
+    right: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    paddingVertical: 10,
+    width: 150,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  menuItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  menuItemText: {
+    fontSize: 16,
+    color: '#51158c',
+  },
   ratingContainer: {
     marginBottom: 20,
     alignItems: 'flex-start',
@@ -267,9 +318,9 @@ const styles = StyleSheet.create({
     color: '#007BFF',
   },
   submitButton: {
-    backgroundColor: '#c96dc6',
+    backgroundColor: '#51158c',
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: 'center',
     marginTop: 20,
   },
