@@ -43,7 +43,8 @@
     "react-native-star-rating": "^1.1.0",
     "react-native-stars": "^1.2.2",
     "react-native-web": "~0.19.13",
-    "react-native-webview": "13.12.4"
+    "react-native-webview": "13.12.4",
+    "expo-image-picker": "~16.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
