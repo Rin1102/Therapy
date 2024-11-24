@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert,ImageBackground } from 'react-native';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -16,6 +16,7 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+     
       <Text style={styles.title}>Login</Text>
 
       <TextInput
@@ -46,6 +47,12 @@ const LoginScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  background: {
+  width: '100%',
+  height: '100%',
+  position: 'absolute',
+   
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -57,6 +64,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+    color: '#755fb4',
   },
   input: {
     borderWidth: 1,
@@ -67,7 +75,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
   },
   button: {
-    backgroundColor: '#0066cc',
+    backgroundColor: '#f89be2',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
