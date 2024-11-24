@@ -17,7 +17,7 @@ const AfterSignUpScreen = ({ navigation }) => {
   const [showMenu, setShowMenu] = useState(false); // Avatar menu state
 
   const gender = 'female'; // Placeholder: Replace with gender from sign-up form
-  const firstName = 'Cyrine'; // Placeholder: Replace with first name from sign-up form
+  const firstName = 'Sirine'; // Placeholder: Replace with first name from sign-up form
 
   // Star rating messages
   const handleRatingChange = (newRating) => {
