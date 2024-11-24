@@ -1,12 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { LineChart, BarChart } from 'react-native-chart-kit';
+import CircularProgress from 'react-native-circular-progress-indicator'; // Ensure this library is installed
 
 const DashboardScreen = () => {
   // Data for visualizations
   const [moodData, setMoodData] = useState([50, 60, 70, 80, 75, 90]);
   const [waterIntakeData, setWaterIntakeData] = useState([2, 4, 6, 5, 3, 7]);
   const [sleepData, setSleepData] = useState([6, 7, 8, 7.5, 6.5, 7]);
+
+  // Real-time data
+  const [heartRate, setHeartRate] = useState(72); // Example initial heart rate
+  const [stressLevel, setStressLevel] = useState(35); // Example initial stress level
+
+  // Simulate real-time updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeartRate((prev) => Math.max(60, Math.min(120, prev + Math.random() * 10 - 5))); // Fluctuates between 60 and 120 bpm
+      setStressLevel((prev) => Math.max(0, Math.min(100, prev + Math.random() * 5 - 2))); // Fluctuates between 0% and 100%
+    }, 2000); // Update every 2 seconds
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
 
   return (
     <ScrollView style={styles.container}>
@@ -66,6 +81,41 @@ const DashboardScreen = () => {
           style={styles.chart}
         />
       </View>
+
+      {/* Real-Time Data Section */}
+      <View style={styles.realTimeSection}>
+        <Text style={styles.sectionTitle}>Real-Time Data</Text>
+        <View style={styles.gaugeContainer}>
+          {/* Heart Rate */}
+          <View style={styles.gauge}>
+            <Text style={styles.gaugeLabel}>Stress Level</Text>
+            <CircularProgress
+              value={heartRate}
+              maxValue={150}
+              radius={70}
+              textColor="#51158c"
+              activeStrokeColor="#51158c"
+              inActiveStrokeColor="#e0e0e0"
+              valueSuffix=" bpm"
+              valueSuffixStyle={{ fontSize: 20 }} // Smaller "bpm"
+            />
+          </View>
+
+          {/* Stress Level */}
+          <View style={styles.gauge}>
+            <Text style={styles.gaugeLabel}>Heart Rate</Text>
+            <CircularProgress
+              value={stressLevel}
+              maxValue={100}
+              radius={70}
+              textColor="#ff6b6b"
+              activeStrokeColor="#ff6b6b"
+              inActiveStrokeColor="#e0e0e0"
+              valueSuffix="%"
+            />
+          </View>
+        </View>
+      </View>
     </ScrollView>
   );
 };
@@ -105,6 +155,36 @@ const styles = StyleSheet.create({
   },
   chart: {
     borderRadius: 10,
+  },
+  realTimeSection: {
+    marginVertical: 20,
+    paddingHorizontal: 20,
+  },
+  gaugeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+   
+  },
+  gauge: {
+    
+    alignItems: 'center',
+    width: '50%',
+  },
+  gaugeLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    
+    marginBottom: 10,
+    color: '#333',
+  },
+  suffix: {
+    position: 'absolute',
+    bottom: 10, // Adjust position relative to the CircularProgress
+    right: -20, // Move slightly to the right
+    fontSize: 12, // Smaller font size
+    color: '#51158c',
+    fontWeight: 'bold',
   },
 });
 
