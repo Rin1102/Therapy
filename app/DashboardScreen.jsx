@@ -86,7 +86,7 @@ const DashboardScreen = () => {
       <View style={styles.realTimeSection}>
         <Text style={styles.sectionTitle}>Real-Time Data</Text>
         <View style={styles.gaugeContainer}>
-          {/* Heart Rate */}
+          {/* stress Rate */}
           <View style={styles.gauge}>
             <Text style={styles.gaugeLabel}>Stress Level</Text>
             <CircularProgress
@@ -96,12 +96,11 @@ const DashboardScreen = () => {
               textColor="#51158c"
               activeStrokeColor="#51158c"
               inActiveStrokeColor="#e0e0e0"
-              valueSuffix=" bpm"
-              valueSuffixStyle={{ fontSize: 20 }} // Smaller "bpm"
+              
             />
           </View>
 
-          {/* Stress Level */}
+          {/* heart Level */}
           <View style={styles.gauge}>
             <Text style={styles.gaugeLabel}>Heart Rate</Text>
             <CircularProgress
@@ -111,7 +110,8 @@ const DashboardScreen = () => {
               textColor="#ff6b6b"
               activeStrokeColor="#ff6b6b"
               inActiveStrokeColor="#e0e0e0"
-              valueSuffix="%"
+             
+              
             />
           </View>
         </View>
@@ -164,27 +164,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
-   
   },
   gauge: {
-    
     alignItems: 'center',
     width: '50%',
   },
   gaugeLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    
     marginBottom: 10,
     color: '#333',
-  },
-  suffix: {
-    position: 'absolute',
-    bottom: 10, // Adjust position relative to the CircularProgress
-    right: -20, // Move slightly to the right
-    fontSize: 12, // Smaller font size
-    color: '#51158c',
-    fontWeight: 'bold',
   },
 });
 
